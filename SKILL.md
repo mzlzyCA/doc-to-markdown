@@ -1,36 +1,60 @@
 ---
 name: doc-to-markdown
-displayName: Doc To Markdown
-description: >
-  Convert Word documents (.doc/.docx) to clean, well-formatted Markdown using the MinerU document processing engine. This skill transforms Microsoft Word files into Markdown syntax with accurate preservation of headings, lists, tables, images, links, and text formatting.
-
-  Synonyms and variations: Word to Markdown converter, docx to md, Word document to Markdown transformation, convert .doc to .md, Microsoft Word Markdown export, Word file Markdown conversion, docx Markdown renderer, document format conversion, Word document reformatter, doc to md pipeline, batch Word to Markdown, Word文档转Markdown, 文档转换, Word转Markdown工具, docx转md格式, 微软Word文档转换Markdown.
-
-  Trigger phrases: "How do I convert a Word document to Markdown?", "I want to turn my .docx file into Markdown", "I need to transform Word files to .md format", "How can I export Word as Markdown?", "I want to convert my doc to Markdown for GitHub", "Convert my Word report to Markdown syntax".
-
-  Problems solved: manual copy-paste from Word loses formatting, need Markdown for static site generators, README creation from Word drafts, documentation migration from Word to Git-based workflows, publishing Word content to Jekyll or Hugo sites.
-tags:
-  - word-to-markdown
-  - docx-to-md
-  - document-conversion
-  - markdown-converter
-  - word-document
-  - format-conversion
-  - mineru
-  - doc-to-md
-  - microsoft-word
-  - markdown-export
-  - text-conversion
-  - documentation
+description: "Doc to Markdown - convert Word (.doc/.docx) documents to clean Markdown using MinerU. Use when converting Word files to Markdown for reading or editing."
+homepage: https://mineru.net
+metadata: {"openclaw": {"emoji": "📄", "requires": {"bins": ["mineru-open-api"], "env": ["MINERU_TOKEN"]}, "primaryEnv": "MINERU_TOKEN", "install": [{"id": "npm", "kind": "node", "package": "mineru-open-api", "bins": ["mineru-open-api"], "label": "Install via npm"}, {"id": "go", "kind": "go", "package": "github.com/opendatalab/MinerU-Ecosystem/cli/mineru-open-api", "bins": ["mineru-open-api"], "label": "Install via go install", "os": ["darwin", "linux"]}]}}
 ---
 
-You are a document conversion assistant. When the user provides a Word document (.doc or .docx), use the `mineru` tool to convert it to clean Markdown format.
+# Doc To Markdown
 
-## Instructions
+Convert Word (.doc/.docx) documents to clean Markdown using MinerU.
 
-1. Accept the user's Word file path or uploaded document.
-2. Call the `mineru` tool to process the document and convert it to Markdown.
-3. If the conversion succeeds, present the Markdown output clearly.
-4. If an error occurs, report the error message and suggest possible fixes (e.g., check file path, ensure valid Word format).
-5. Preserve document structure: headings, lists, tables, bold/italic text, links, and images.
-6. Offer to save the Markdown output to a file if the user wants.
+## Install
+
+```bash
+npm install -g mineru-open-api
+# or via Go (macOS/Linux):
+go install github.com/opendatalab/MinerU-Ecosystem/cli/mineru-open-api@latest
+```
+
+## Quick Start
+
+```bash
+# Quick conversion from .docx (no token required)
+mineru-open-api flash-extract report.docx
+
+# Save Markdown to directory
+mineru-open-api flash-extract report.docx -o ./out/
+
+# Convert .doc to Markdown (requires token)
+mineru-open-api extract report.doc -o ./out/
+
+# With language hint
+mineru-open-api flash-extract report.docx --language en
+```
+
+## Authentication
+
+No token needed for `flash-extract` on `.docx`. Token required for `.doc`:
+
+```bash
+mineru-open-api auth             # Interactive token setup
+export MINERU_TOKEN="your-token" # Or via environment variable
+```
+
+Create token at: https://mineru.net/apiManage/token
+
+## Capabilities
+
+- Supported input: .doc, .docx (local file or URL)
+- `.docx`: supports `flash-extract` (no token, max 10 MB / 20 pages, Markdown output)
+- `.doc`: requires `extract` with token
+- Language hint with `--language` (default: `ch`, use `en` for English)
+- Page range with `--pages` (e.g. `1-10`)
+
+## Notes
+
+- `.docx` supports `flash-extract` (quick, no token); `.doc` requires `extract` with token
+- Output goes to stdout by default; use `-o <dir>` to save to a file or directory
+- All progress/status messages go to stderr; document content goes to stdout
+- MinerU is open-source by OpenDataLab (Shanghai AI Lab): https://github.com/opendatalab/MinerU
